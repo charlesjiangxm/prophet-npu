@@ -127,7 +127,7 @@ end
 reg [31:0] retire_inst_in_period;
 reg [31:0] cycle_count;
 
-`define LAST_CYCLE 50000
+`define LAST_CYCLE 100000000
 always @(posedge clk or negedge rst_b)
 begin
   if(!rst_b)
