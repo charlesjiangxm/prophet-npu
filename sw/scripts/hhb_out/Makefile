@@ -16,7 +16,7 @@
 #*/
 XUANTIE_ROOT = /opt/Xuantie-900-gcc-linux-6.6.0-glibc-x86_64-V3.1.0/bin
 FILE 		 = hhb_runtime
-CONVERT		 = ../utils/Srec2vmem
+CONVERT		 = ../../utils/Srec2vmem
 CC      	 = ${XUANTIE_ROOT}/riscv64-unknown-linux-gnu-gcc
 AS      	 = ${XUANTIE_ROOT}/riscv64-unknown-linux-gnu-as
 LINK    	 = ${XUANTIE_ROOT}/riscv64-unknown-linux-gnu-ld

@@ -96,8 +96,8 @@ integer i;
     end
   
     $display("\t********* Read program *********");
-    $readmemh("inst.pat", mem_inst_temp);
-    $readmemh("data.pat", mem_data_temp);
+    $readmemh("hhb_runtime_inst.pat", mem_inst_temp);
+    $readmemh("hhb_runtime_data.pat", mem_data_temp);
   
     $display("\t********* Load program to memory *********");
     for (i=0; i<('h10000/16); i=i+1) begin
