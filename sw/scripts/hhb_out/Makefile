@@ -19,6 +19,7 @@ CC = riscv64-unknown-linux-gnu-gcc
 AS = riscv64-unknown-linux-gnu-as
 OBJDUMP = riscv64-unknown-linux-gnu-objdump
 OBJCOPY = riscv64-unknown-linux-gnu-objcopy
+CONVERT = ../../utils/Srec2vmem
 
 INCLUDE += -I/usr/local/lib/python3.8/dist-packages/hhb/install_nn2/x86/include/ \
 	-I/usr/local/lib/python3.8/dist-packages/tvm/dlpack/include/ \
@@ -42,9 +43,14 @@ LDFLAGS += -Wl,--gc-sections -O2 -g -mabi=lp64d -lshl -fopenmp -static -lprebuil
 # The entry point should be 0x10000000 to match hello.elf
 LDFLAGS += -Wl,--entry=0x10000000 -Wl,--section-start=.text=0x10000000
 
+# pat file for vcs simulation
+INST_PAT = inst.pat
+DATA_PAT = data.pat
+FILE_PAT = case.pat
+
 .PHONY: clean all
 
-all: hhb_runtime_sim.elf hhb_runtime_sim.obj hhb_runtime_sim.hex
+all: hhb_runtime_sim.pat hhb_runtime_sim.elf hhb_runtime_sim.obj hhb_runtime_sim.hex
 
 main.o: main.c
 	$(CC) $(CFLAGS) -c -o $@  $^
@@ -72,5 +78,10 @@ hhb_runtime_sim.hex: hhb_runtime_sim.elf
 	$(OBJCOPY) -O srec $< $(DATA_HEX) -j .data* -j .bss -j .COMMON
 	$(OBJCOPY) -O srec $< $@
 
+%.pat	: %.hex
+	rm -f *.pat
+	${CONVERT} ${INST_HEX} ${INST_PAT}
+	${CONVERT} ${DATA_HEX} ${DATA_PAT}
+
 clean:
-	-rm *.o hhb_runtime_sim.elf hhb_runtime_sim.obj hhb_runtime_sim.hex hhb_runtime_sim_inst.hex hhb_runtime_sim_data.hex
+	-rm *.pat *.o hhb_runtime_sim.elf hhb_runtime_sim.obj hhb_runtime_sim.hex hhb_runtime_sim_inst.hex hhb_runtime_sim_data.hex
