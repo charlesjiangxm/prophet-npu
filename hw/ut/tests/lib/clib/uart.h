@@ -15,6 +15,7 @@ limitations under the License.
 #ifndef __UART_H__
 #define __UART_H__
 
+#include <stdint.h>
 #include "datatype.h"
 #include "stdio.h"
 

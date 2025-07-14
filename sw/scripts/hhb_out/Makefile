@@ -100,6 +100,6 @@ hex : ${FILE}.hex
 .PHONY :pat
 pat : ${FILE}.pat
 
-.PHONY :clean 
+.PHONY :clean
 clean:
 	rm -rf *.o *.pat *.elf *.obj *.hex

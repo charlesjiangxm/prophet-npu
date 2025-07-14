@@ -26,7 +26,7 @@ int __thead_vprintfprintf(FILE *stream, const char *format, va_list arg_ptr)
 }
 
 #undef stdout
-int stdout()
+int stdout_func()
 {
     return 0;
 }
