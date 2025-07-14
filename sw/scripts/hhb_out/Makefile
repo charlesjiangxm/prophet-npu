@@ -1,105 +1,76 @@
-#/*Copyright 2020-2021 T-Head Semiconductor Co., Ltd.
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
 #
-#Licensed under the Apache License, Version 2.0 (the "License");
-#you may not use this file except in compliance with the License.
-#You may obtain a copy of the License at
+#   http://www.apache.org/licenses/LICENSE-2.0
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
-#
-#Unless required by applicable law or agreed to in writing, software
-#distributed under the License is distributed on an "AS IS" BASIS,
-#WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#See the License for the specific language governing permissions and
-#limitations under the License.
-#*/
-#*/
-#*/
-XUANTIE_ROOT = /opt/Xuantie-900-gcc-linux-6.6.0-glibc-x86_64-V3.1.0/bin
-FILE 		 = hhb_runtime
-CONVERT		 = ../../utils/Srec2vmem
-CC      	 = ${XUANTIE_ROOT}/riscv64-unknown-linux-gnu-gcc
-AS      	 = ${XUANTIE_ROOT}/riscv64-unknown-linux-gnu-as
-LINK    	 = ${XUANTIE_ROOT}/riscv64-unknown-linux-gnu-ld
-OBJDUMP 	 = ${XUANTIE_ROOT}/riscv64-unknown-linux-gnu-objdump
-OBJCOPY 	 = ${XUANTIE_ROOT}/riscv64-unknown-linux-gnu-objcopy
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
 
-# SSRC = $(wildcard *.S)
-# sSRC = $(wildcard *.s)
-# CSRC = $(wildcard *.c)
+CC = riscv64-unknown-linux-gnu-gcc
+AS = riscv64-unknown-linux-gnu-as
+OBJDUMP = riscv64-unknown-linux-gnu-objdump
+OBJCOPY = riscv64-unknown-linux-gnu-objcopy
 
-# OBJECTS = $(SSRC:%.S=%.o) $(sSRC:%.s=%.o) $(CSRC:%.c=%.o)
+INCLUDE += -I/usr/local/lib/python3.8/dist-packages/hhb/install_nn2/x86/include/ \
+	-I/usr/local/lib/python3.8/dist-packages/tvm/dlpack/include/ \
+	-I/usr/local/lib/python3.8/dist-packages/hhb/install_nn2/x86/include/shl_public/ \
+	-I/usr/local/lib/python3.8/dist-packages/hhb/install_nn2/x86/include/csinn/ \
+	-I/usr/local/lib/python3.8/dist-packages/tvm/include/ \
+	-I \
+	/usr/local/lib/python3.8/dist-packages/hhb/prebuilt/runtime/cmd_parse \
+	-I.
 
-# INCLUDE += -I/usr/local/lib/python3.8/dist-packages/hhb/install_nn2/x86/include/ \
-# 	-I/usr/local/lib/python3.8/dist-packages/tvm/dlpack/include/ \
-# 	-I/usr/local/lib/python3.8/dist-packages/hhb/install_nn2/x86/include/shl_public/ \
-# 	-I/usr/local/lib/python3.8/dist-packages/hhb/install_nn2/x86/include/csinn/ \
-# 	-I/usr/local/lib/python3.8/dist-packages/tvm/include/ \
-# 	-I/usr/local/lib/python3.8/dist-packages/hhb/prebuilt/runtime/cmd_parse \
-# 	-I.
+LDFLAGS += -L/usr/local/lib/python3.8/dist-packages/hhb/install_nn2/c906/lib/ \
+	-L/usr/local/lib/python3.8/dist-packages/hhb/prebuilt/decode/install/lib/rv \
+	-L/usr/local/lib/python3.8/dist-packages/hhb/prebuilt/runtime/riscv_linux \
+	
 
-# LDFLAGS += -L/usr/local/lib/python3.8/dist-packages/hhb/install_nn2/c906/lib/ \
-# 	-L/usr/local/lib/python3.8/dist-packages/hhb/prebuilt/decode/install/lib/rv \
-# 	-L/usr/local/lib/python3.8/dist-packages/hhb/prebuilt/runtime/riscv_linux \
+# Build regular Linux executable first, then convert for simulator
+CFLAGS +=  -O2 -g -mabi=lp64d  -march=rv64imafdcxtheadc ${INCLUDE}
+LDFLAGS += -Wl,--gc-sections -O2 -g -mabi=lp64d -lshl -fopenmp -static -lprebuilt_runtime -ljpeg -lpng -lz -lstdc++ -lm
 
-# FLAG_ABI   		= -mabi=lp64d
-# FLAG_MARCH 		= -march=rv64gcv0p7_zfh_xtheadc
-# CFLAGS 			= -O2 -g ${FLAG_MARCH} ${FLAG_ABI} ${INCLUDE}
+# Set simulator-compatible entry point via linker script
+# The entry point should be 0x10000000 to match hello.elf
+LDFLAGS += -Wl,--entry=0x10000000 -Wl,--section-start=.text=0x10000000
 
-# LINKFLAGS 		= -Tlinker.lcf -nostartfiles ${FLAG_MARCH} ${FLAG_ABI}
-# LDFLAGS 		+= -Wl,--gc-sections -O2 -g -mabi=lp64d -lshl -fopenmp -static -lprebuilt_runtime -ljpeg -lpng -lz -lstdc++ -lm
-OBJDUMPFLAGS 	= -S -Mnumeric
-HEXFLAGS		= -O srec
+.PHONY: clean all
 
-# %.o : %.c
-# 	${CC} -c ${CFLAGS} -o $@ $<
+all: hhb_runtime_sim.elf hhb_runtime_sim.obj hhb_runtime_sim.hex
 
-# %.o : %.s
-# 	${CC} -c ${CFLAGS} -o $@ $<
+main.o: main.c
+	$(CC) $(CFLAGS) -c -o $@  $^
 
-# %.o : %.S
-# 	${CC} -c ${CFLAGS} -o $@ $<
+model.o: model.c
+	$(CC) $(CFLAGS) -c -o $@  $^
 
-# ${FILE} : ${OBJECTS} linker.lcf
-# 	${CC} ${LINKFLAGS} ${LDFLAGS} ${OBJECTS} -o $@ -lm 
+io.o: io.c
+	$(CC) $(CFLAGS) -c -o $@  $^
 
-${FILE}.obj : ${FILE}
-	${OBJDUMP} ${OBJDUMPFLAGS} $< > $@
+# Build regular Linux executable
+hhb_runtime_sim.elf: main.o model.o io.o
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
-INST_HEX = ${FILE}_inst.hex
-DATA_HEX = ${FILE}_data.hex
-FILE_HEX = ${FILE}.hex
+# Object dump generation
+hhb_runtime_sim.obj: hhb_runtime_sim.elf
+	$(OBJDUMP) -S -Mnumeric $< > $@
 
-${FILE}.hex : ${FILE}
-	${OBJCOPY} ${HEXFLAGS} $< ${INST_HEX} -j .text*  -j .rodata* -j .eh_frame*
-	${OBJCOPY} ${HEXFLAGS} $< ${DATA_HEX} -j .data*  -j .bss -j .COMMON
-	${OBJCOPY} ${HEXFLAGS} $< $@ 
+# Hex files generation
+INST_HEX = hhb_runtime_sim_inst.hex
+DATA_HEX = hhb_runtime_sim_data.hex
 
-INST_PAT = inst.pat
-DATA_PAT = data.pat
-FILE_PAT = case.pat
+hhb_runtime_sim.hex: hhb_runtime_sim.elf
+	$(OBJCOPY) -O srec $< $(INST_HEX) -j .text* -j .rodata* -j .eh_frame*
+	$(OBJCOPY) -O srec $< $(DATA_HEX) -j .data* -j .bss -j .COMMON
+	$(OBJCOPY) -O srec $< $@
 
-%.pat	: %.hex
-	rm -f *.pat
-	${CONVERT} ${INST_HEX} ${INST_PAT}
-	${CONVERT} ${DATA_HEX} ${DATA_PAT}
-	${CONVERT} ${FILE_HEX} ${FILE_PAT}
-
-.PHONY :all
-# all : ${FILE}.pat ${FILE}.hex ${FILE}.elf ${FILE}.obj
-all : ${FILE}.pat ${FILE}.hex ${FILE}.obj
-
-# .PHONY :elf
-# elf : ${FILE}.elf
-
-.PHONY :obj
-obj : ${FILE}.obj
-
-.PHONY :hex
-hex : ${FILE}.hex
-
-.PHONY :pat
-pat : ${FILE}.pat
-
-.PHONY :clean
 clean:
-	rm -rf *.o *.pat *.elf *.obj *.hex
+	-rm *.o hhb_runtime_sim.elf hhb_runtime_sim.obj hhb_runtime_sim.hex hhb_runtime_sim_inst.hex hhb_runtime_sim_data.hex
