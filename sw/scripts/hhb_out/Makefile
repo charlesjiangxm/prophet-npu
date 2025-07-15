@@ -41,7 +41,8 @@ LDFLAGS += -Wl,--gc-sections -O2 -g -mabi=lp64d -lshl -fopenmp -static -lprebuil
 
 # Set simulator-compatible entry point via linker script
 # The entry point should be 0x10000000 to match hello.elf
-LDFLAGS += -Wl,--entry=0x10000000 -Wl,--section-start=.text=0x10000000
+# LDFLAGS += -Wl,--entry=0x10000000 -Wl,--section-start=.text=0x10000000
+LDFLAGS += --entry=0x10000000
 
 # pat file for vcs simulation
 INST_PAT = inst.pat
