@@ -15,8 +15,8 @@ limitations under the License.
 `define NOISA
 
 `timescale 1ns/1ps
-`define CLK_PERIOD          1
-`define TCLK_PERIOD         4
+`define CLK_PERIOD          10
+`define TCLK_PERIOD         40
 `define CHK_RETIRE_CYC      50000
 `define MAX_RUN_TIME        100000000000
 
