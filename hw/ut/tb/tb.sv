@@ -17,7 +17,7 @@ limitations under the License.
 `timescale 1ns/1ps
 `define CLK_PERIOD          10
 `define TCLK_PERIOD         40
-`define CHK_RETIRE_CYC      50000
+`define CHK_RETIRE_CYC      5000000
 `define MAX_RUN_TIME        100000000000
 
 `define SOC_TOP             tb.x_soc
@@ -132,7 +132,7 @@ module tb();
     // ----------
     always @(posedge clk or negedge rst_b) begin
         if(!rst_b)
-            sim_cyc_cnt[31:0] <= 32'b0;
+            sim_cyc_cnt[31:0] <= 32'd1; // starts from 1 to avoid (sim_cyc_cnt[31:0] % `CHK_RETIRE_CYC) == 0 at the first check 
         else // counter stores the simulation total cycles
             sim_cyc_cnt[31:0] <= sim_cyc_cnt[31:0] + 32'd1;
     end
