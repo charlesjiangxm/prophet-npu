@@ -100,17 +100,17 @@ module tb();
     // ----------
     initial begin
         // initialize the memory
-        $display("\t********* Init Program and Wipe Memory to 0*********");
+        $display("\t********* Init Program and Wipe Memory to 0 *********");
         for(i = 0; i < `MEM_DEP; i = i + 1) begin
             `RTL_MEM.mem[i] = `MEM_WID'd0;
         end
         // load instruction and data into temporary memory
-        $display("\t********* Read program *********");
+        $display("\t********* Read program                      *********");
         $readmemh("inst.pat", mem_inst_tmp);
         $readmemh("data.pat", mem_data_tmp);
         $display("\t********* Load instr. to the unified memory *********");
         load_memory_data(mem_inst_tmp, 0);
-        $display("\t********* Load data to the unified memory *********");
+        $display("\t********* Load data to the unified memory   *********");
         load_memory_data(mem_data_tmp, `MEM_DEP/4);
     end
 
@@ -133,9 +133,7 @@ module tb();
     always @(posedge clk or negedge rst_b) begin
         if(!rst_b)
             sim_cyc_cnt[31:0] <= 32'b0;
-        else if((sim_cyc_cnt[31:0] % `CHK_RETIRE_CYC) == 0)
-            sim_cyc_cnt[31:0] <= 32'b0;
-        else    
+        else // counter stores the simulation total cycles
             sim_cyc_cnt[31:0] <= sim_cyc_cnt[31:0] + 32'd1;
     end
     
@@ -158,7 +156,7 @@ module tb();
             // reset the number of retired instructions
             num_retire_instr[31:0] <= 32'b0;
         end else if(`tb_retire0) begin
-            num_retire_instr[31:0] <= num_retire_instr[31:0] + 1'b1;
+            num_retire_instr[31:0] <= num_retire_instr[31:0] + 32'd1;
         end
     end
     
