@@ -14,16 +14,17 @@ limitations under the License.
 */
 MEMORY
 {
-MEM1(RWX)  : ORIGIN = 0x10000000,  LENGTH = 0x10000
-MEM2(RWX)  : ORIGIN = 0x10010000,  LENGTH = 0x30000
+MEM1(RWX)  : ORIGIN = 0x10000000,  LENGTH = 0x800000
+MEM2(RWX)  : ORIGIN = 0x10800000,  LENGTH = 0x800000
 }
-__kernel_stack = 0x10030000 ;
+__kernel_stack = 0x11000000 ;
 
-ENTRY(main)
+ENTRY(__start)
 
 SECTIONS {
     .text :
     {
+        crt0.o (.text)
         *(.text*)
     } >MEM1
 
