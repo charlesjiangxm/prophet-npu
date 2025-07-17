@@ -402,8 +402,16 @@ end
 
 wire [127:0] rd_out;
 assign mem_dout = rd_out;
-f_spsram_16384x128 x_f_spsram_16384x128 (
-  .A   (mem_addr[4 +: 14]), 
+// f_spsram_16384x128 x_f_spsram_16384x128 (
+//   .A   (mem_addr[4 +: 14]), 
+//   .CEN (mem_cen), 
+//   .CLK (pll_core_cpuclk), 
+//   .D   (mem_din), 
+//   .Q   (rd_out), 
+//   .WEN (mem_wen)
+// );
+f_spsram_524288x128 x_f_spsram_524288x128 (
+  .A   (mem_addr[4 +: 19]), 
   .CEN (mem_cen), 
   .CLK (pll_core_cpuclk), 
   .D   (mem_din), 

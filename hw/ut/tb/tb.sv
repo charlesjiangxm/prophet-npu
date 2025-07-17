@@ -22,8 +22,8 @@ limitations under the License.
 
 `define SOC_TOP             tb.x_soc
 `define CPU_TOP             tb.x_soc.x_c906_wrap.x_cpu_top
-`define RTL_MEM             tb.x_soc.x_axi_slave_warp.x_axi_slave128.x_f_spsram_16384x128
-`define MEM_DEP             16384
+`define RTL_MEM             tb.x_soc.x_axi_slave_warp.x_axi_slave128.x_f_spsram_524288x128
+`define MEM_DEP             524288
 `define MEM_WID             128   
 
 `define tb_retire0          `CPU_TOP.core0_pad_retire

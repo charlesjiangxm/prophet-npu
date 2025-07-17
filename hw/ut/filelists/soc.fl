@@ -20,3 +20,4 @@ ${CODE_BASE_PATH}/peripheral/axi/axi_interconnect/arbiter.v
 ${CODE_BASE_PATH}/peripheral/axi/axi_interconnect/priority_encoder.v
 ${CODE_BASE_PATH}/peripheral/axi/axi2sram/axi_slave128.v
 ${CODE_BASE_PATH}/peripheral/axi/axi2sram/f_spsram_16384x128.v
+${CODE_BASE_PATH}/peripheral/axi/axi2sram/f_spsram_524288x128.v
