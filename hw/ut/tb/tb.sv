@@ -25,8 +25,8 @@ limitations under the License.
 `define RTL_MEM             tb.x_soc.x_axi_slave_warp.x_axi_slave128.x_f_spsram_524288x128
 `define MEM_DEP             524288
 `define MEM_WID             128
-`define INST_MEM_DEP        `MEM_DEP/4
-`define DATA_MEM_DEP        3*`MEM_DEP/4
+`define INST_MEM_DEP        3*`MEM_DEP/4
+`define DATA_MEM_DEP        `MEM_DEP/4
 
 `define tb_retire0          `CPU_TOP.core0_pad_retire
 `define retire0_pc          `CPU_TOP.core0_pad_retire_pc[39:0]
