@@ -24,7 +24,9 @@ limitations under the License.
 `define CPU_TOP             tb.x_soc.x_c906_wrap.x_cpu_top
 `define RTL_MEM             tb.x_soc.x_axi_slave_warp.x_axi_slave128.x_f_spsram_524288x128
 `define MEM_DEP             524288
-`define MEM_WID             128   
+`define MEM_WID             128
+`define INST_MEM_DEP        `MEM_DEP/4
+`define DATA_MEM_DEP        3*`MEM_DEP/4
 
 `define tb_retire0          `CPU_TOP.core0_pad_retire
 `define retire0_pc          `CPU_TOP.core0_pad_retire_pc[39:0]
@@ -109,9 +111,9 @@ module tb();
         $readmemh("inst.pat", mem_inst_tmp);
         $readmemh("data.pat", mem_data_tmp);
         $display("\t********* Load instr. to the unified memory *********");
-        load_memory_data(mem_inst_tmp, 0);
+        load_memory_data(mem_inst_tmp, 0, `INST_MEM_DEP);
         $display("\t********* Load data to the unified memory   *********");
-        load_memory_data(mem_data_tmp, `MEM_DEP/4);
+        load_memory_data(mem_data_tmp, `MEM_DEP/4, `DATA_MEM_DEP);
     end
 
     // ----------
@@ -245,12 +247,13 @@ module tb();
     // -----------------------------------------
     function void load_memory_data(
         input bit [`MEM_WID/4 -1:0] mem_tmp [`MEM_DEP*4],
-        input integer base_offset
+        input integer base_offset,
+        input integer mem_dep
         );
         bit [`MEM_WID-1:0] mem_data;
         integer i, j;
         
-        for (i = 0; i < `MEM_DEP/4; i = i + 1) begin
+        for (i = 0; i < mem_dep; i = i + 1) begin
             // convert each inst/data width (32b) to little endian
             mem_data = {mem_tmp[i*4+0], mem_tmp[i*4+1], mem_tmp[i*4+2], mem_tmp[i*4+3]};
             // convert each word (8b) to little endian
