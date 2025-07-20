@@ -44,32 +44,34 @@ module aq_iu_mul(
 );
 
 // &Ports; @24
-input            cp0_iu_icg_en;               
-input            cp0_yy_clk_en;               
-input            cpurst_b;                    
+// This design can execute in 1, 2, 3 or 4cycles
+// This design has 3 stages, ex1, ex2 and ex3
+input            cp0_iu_icg_en;           // clock enable
+input            cp0_yy_clk_en;           // clock enable
+input            cpurst_b;                // rst_n
 input            forever_cpuclk;              
-input   [5  :0]  idu_iu_ex1_dst_preg;         
-input   [19 :0]  idu_iu_ex1_func;             
-input            idu_iu_ex1_mult_dp_sel;      
-input            idu_iu_ex1_mult_sel;         
+input   [5  :0]  idu_iu_ex1_dst_preg;     // bypass preg
+input   [19 :0]  idu_iu_ex1_func;         // control payload    
+input            idu_iu_ex1_mult_dp_sel;  // input data gating to reduce power
+input            idu_iu_ex1_mult_sel;     // module's valid signal
 input   [63 :0]  idu_iu_ex1_src0;             
 input   [63 :0]  idu_iu_ex1_src1;             
 input   [63 :0]  idu_iu_ex1_src2;             
-input            idu_mult_ex1_gateclk_sel;    
-input            ifu_iu_warm_up;              
-input            pad_yy_icg_scan_en;          
-input            rtu_iu_mul_wb_grant;         
-input            rtu_iu_mul_wb_grant_for_full; 
-input            rtu_yy_xx_flush_fe;          
-output           iu_idu_mult_full;            
+input            idu_mult_ex1_gateclk_sel;// clock enable
+input            ifu_iu_warm_up;          // warm up stage    
+input            pad_yy_icg_scan_en;      // scan enable    
+input            rtu_iu_mul_wb_grant;     // backpressure signal
+input            rtu_iu_mul_wb_grant_for_full; // backpressure signal
+input            rtu_yy_xx_flush_fe;      // flush and reset this module to IDLE    
+output           iu_idu_mult_full;        // outgoing backpressure signal    
 output           iu_idu_mult_issue_stall;     
-output           iu_rtu_ex1_mul_cmplt;        
-output           iu_rtu_ex1_mul_cmplt_dp;     
+output           iu_rtu_ex1_mul_cmplt;    // ex1 output valid, rtu can retire this instruction
+output           iu_rtu_ex1_mul_cmplt_dp; // same as above, but for data path, only valid when the instruction needs calculation, for lower power
 output  [63 :0]  iu_rtu_ex3_mul_data;         
-output  [5  :0]  iu_rtu_ex3_mul_preg;         
-output           iu_rtu_ex3_mul_wb_vld;       
-output           mul_ctrl_no_op;              
-output  [1  :0]  mul_dbginfo;                 
+output  [5  :0]  iu_rtu_ex3_mul_preg;     // the bypassed signal     
+output           iu_rtu_ex3_mul_wb_vld;   // the final output valid     
+output           mul_ctrl_no_op;          // no operation     
+output  [1  :0]  mul_dbginfo;             // debug information           
 
 // &Regs; @25
 reg     [1  :0]  mul_cur_state;               
