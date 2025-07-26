@@ -46,6 +46,7 @@ module aq_iu_mul(
 // &Ports; @24
 // This design can execute in 1, 2, 3 or 4cycles
 // This design has 3 stages, ex1, ex2 and ex3
+// inputs
 input            cp0_iu_icg_en;           // clock enable
 input            cp0_yy_clk_en;           // clock enable
 input            cpurst_b;                // rst_n
@@ -63,13 +64,17 @@ input            pad_yy_icg_scan_en;      // scan enable
 input            rtu_iu_mul_wb_grant;     // backpressure signal
 input            rtu_iu_mul_wb_grant_for_full; // backpressure signal
 input            rtu_yy_xx_flush_fe;      // flush and reset this module to IDLE    
+
+// outputs
 output           iu_idu_mult_full;        // outgoing backpressure signal    
 output           iu_idu_mult_issue_stall;     
+
 output           iu_rtu_ex1_mul_cmplt;    // ex1 output valid, rtu can retire this instruction
 output           iu_rtu_ex1_mul_cmplt_dp; // same as above, but for data path, only valid when the instruction needs calculation, for lower power
 output  [63 :0]  iu_rtu_ex3_mul_data;         
 output  [5  :0]  iu_rtu_ex3_mul_preg;     // the bypassed signal     
-output           iu_rtu_ex3_mul_wb_vld;   // the final output valid     
+output           iu_rtu_ex3_mul_wb_vld;   // the instruction done and can be write-back
+
 output           mul_ctrl_no_op;          // no operation     
 output  [1  :0]  mul_dbginfo;             // debug information           
 
