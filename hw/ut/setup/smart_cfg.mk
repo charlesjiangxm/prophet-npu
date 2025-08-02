@@ -30,6 +30,7 @@ CASE_LIST := \
       hello \
       wr_reg \
       uart_print \
+	  vec_add \
 
 
 ISA_THEAD_build:
@@ -75,9 +76,6 @@ interrupt_build:
 	@find ./tests/lib/ -maxdepth 1 -type f -exec cp {} ./work/ \; 
 	@cd ./work && make -s clean && make -s all CPU_ARCH_FLAG_0=c906fd  ENDIAN_MODE=little-endian CASENAME=interrupt FILE=C906_plic_int_smoke
 
-
-
-
 exception_build:
 	@cp ./tests/cases/exception/* ./work
 	@find ./tests/lib/ -maxdepth 1 -type f -exec cp {} ./work/ \; 
@@ -120,6 +118,12 @@ uart_print_build:
 	@cp ./tests/lib/newlib_wrap/* ./work
 	@cd ./work && make -s clean && make -s all CPU_ARCH_FLAG_0=c906fd  ENDIAN_MODE=little-endian CASENAME=uart_print FILE=uart_print
 
+vec_add_build:
+	@cp ./tests/cases/vec/vec_add.c ./work
+	@find ./tests/lib/ -maxdepth 1 -type f -exec cp {} ./work/ \; 
+	@cp ./tests/lib/clib/* ./work
+	@cp ./tests/lib/newlib_wrap/* ./work
+	@cd ./work && make -s clean && make -s all CPU_ARCH_FLAG_0=c906fd  ENDIAN_MODE=little-endian CASENAME=vec_add FILE=vec_add
 
 # Adjust verilog filelist for *.v case...
 ifeq ($(CASE), debug)
