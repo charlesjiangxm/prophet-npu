@@ -16,6 +16,8 @@ limitations under the License.
 // &Depend("cpu_cfig.h"); @18
 
 // &ModuleBeg; @20
+// vector load store unit - vector table buffer
+// 4 entries, each entry can store 64b data blocks with control info.
 module aq_vlsu_vtb(
   cp0_vpu_icg_en,
   cpurst_b,

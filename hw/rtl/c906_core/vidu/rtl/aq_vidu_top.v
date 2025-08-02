@@ -71,57 +71,88 @@ module aq_vidu_top(
 );
 
 // &Ports; @26
-input            cp0_idu_icg_en;                  
-input            cp0_yy_clk_en;                   
-input            cpurst_b;                        
-input            forever_cpuclk;                  
-input            idu_vidu_ex1_fp_dp_sel;          
-input            idu_vidu_ex1_fp_gateclk_sel;     
-input            idu_vidu_ex1_fp_sel;             
-input   [179:0]  idu_vidu_ex1_inst_data;          
-input            idu_vidu_ex1_vec_dp_sel;         
-input            idu_vidu_ex1_vec_gateclk_sel;    
-input            idu_vidu_ex1_vec_sel;            
-input            ifu_vidu_warm_up;                
-input            pad_yy_icg_scan_en;              
-input            rtu_vidu_flush_wbt;              
-input            rtu_yy_xx_async_flush;           
-input   [63 :0]  vpu_vidu_fp_fwd_data;            
-input   [4  :0]  vpu_vidu_fp_fwd_reg;             
-input            vpu_vidu_fp_fwd_vld;             
-input   [63 :0]  vpu_vidu_fp_wb_data;             
-input   [4  :0]  vpu_vidu_fp_wb_reg;              
-input            vpu_vidu_fp_wb_vld;              
-input            vpu_vidu_vex1_fp_stall;          
-input   [4  :0]  vpu_vidu_wbt_fp_wb0_reg;         
-input            vpu_vidu_wbt_fp_wb0_vld;         
-input   [4  :0]  vpu_vidu_wbt_fp_wb1_reg;         
-input            vpu_vidu_wbt_fp_wb1_vld;         
-output           vidu_cp0_vid_fof_vld;            
-output  [7  :0]  vidu_dtu_debug_info;             
-output           vidu_idu_fp_full;                
-output           vidu_idu_vec_full;               
-output           vidu_rtu_no_op;                  
-output           vidu_vpu_vid_fp_inst_dp_vld;     
-output  [5  :0]  vidu_vpu_vid_fp_inst_dst_reg;    
-output           vidu_vpu_vid_fp_inst_dst_vld;    
-output           vidu_vpu_vid_fp_inst_dste_vld;   
-output  [4  :0]  vidu_vpu_vid_fp_inst_dstf_reg;   
-output           vidu_vpu_vid_fp_inst_dstf_vld;   
-output  [9  :0]  vidu_vpu_vid_fp_inst_eu;         
-output  [19 :0]  vidu_vpu_vid_fp_inst_func;       
-output           vidu_vpu_vid_fp_inst_gateclk_vld; 
-output  [63 :0]  vidu_vpu_vid_fp_inst_src1_data;  
-output  [63 :0]  vidu_vpu_vid_fp_inst_srcf0_data; 
-output  [63 :0]  vidu_vpu_vid_fp_inst_srcf1_data; 
-output  [63 :0]  vidu_vpu_vid_fp_inst_srcf2_data; 
-output           vidu_vpu_vid_fp_inst_srcf2_rdy;  
-output           vidu_vpu_vid_fp_inst_srcf2_vld;  
-output           vidu_vpu_vid_fp_inst_vld;        
-output           vpu_rtu_ex1_cmplt;               
-output           vpu_rtu_ex1_cmplt_dp;            
-output           vpu_rtu_ex1_fp_dirty;            
-output           vpu_rtu_ex1_vec_dirty;           
+//==========================================================
+//                    Clock & Reset Signals
+//==========================================================
+input            cp0_idu_icg_en;                  // ICG enable from CP0
+input            cp0_yy_clk_en;                   // Global clock enable from CP0
+input            cpurst_b;                        // CPU reset signal (active low)
+input            forever_cpuclk;                  // Free-running CPU clock
+
+//==========================================================
+//                    IDU Interface Signals
+//==========================================================
+input            idu_vidu_ex1_fp_dp_sel;          // FP datapath select from IDU in EX1 stage
+input            idu_vidu_ex1_fp_gateclk_sel;     // FP gate clock select from IDU in EX1 stage
+input            idu_vidu_ex1_fp_sel;             // FP instruction select from IDU in EX1 stage
+input   [179:0]  idu_vidu_ex1_inst_data;          // Instruction data from IDU in EX1 stage
+input            idu_vidu_ex1_vec_dp_sel;         // Vector datapath select from IDU in EX1 stage
+input            idu_vidu_ex1_vec_gateclk_sel;    // Vector gate clock select from IDU in EX1 stage
+input            idu_vidu_ex1_vec_sel;            // Vector instruction select from IDU in EX1 stage
+
+//==========================================================
+//                    Control & Status Signals
+//==========================================================
+input            ifu_vidu_warm_up;                // Warm-up signal from IFU
+input            pad_yy_icg_scan_en;              // ICG scan enable from PAD
+input            rtu_vidu_flush_wbt;              // Write-back table flush from RTU
+input            rtu_yy_xx_async_flush;           // Asynchronous flush from RTU
+
+//==========================================================
+//                    VPU Feedback Signals
+//==========================================================
+input   [63 :0]  vpu_vidu_fp_fwd_data;            // FP forwarding data from VPU
+input   [4  :0]  vpu_vidu_fp_fwd_reg;             // FP forwarding register address from VPU
+input            vpu_vidu_fp_fwd_vld;             // FP forwarding valid from VPU
+input   [63 :0]  vpu_vidu_fp_wb_data;             // FP write-back data from VPU
+input   [4  :0]  vpu_vidu_fp_wb_reg;              // FP write-back register address from VPU
+input            vpu_vidu_fp_wb_vld;              // FP write-back valid from VPU
+input            vpu_vidu_vex1_fp_stall;          // FP stall signal from VPU in VEX1 stage
+input   [4  :0]  vpu_vidu_wbt_fp_wb0_reg;         // Write-back table FP WB0 register from VPU
+input            vpu_vidu_wbt_fp_wb0_vld;         // Write-back table FP WB0 valid from VPU
+input   [4  :0]  vpu_vidu_wbt_fp_wb1_reg;         // Write-back table FP WB1 register from VPU
+input            vpu_vidu_wbt_fp_wb1_vld;         // Write-back table FP WB1 valid from VPU
+
+//==========================================================
+//                    CP0 & Debug Output Signals
+//==========================================================
+output           vidu_cp0_vid_fof_vld;            // Vector first-of-first valid to CP0
+output  [7  :0]  vidu_dtu_debug_info;             // Debug information to DTU
+
+//==========================================================
+//                    IDU Feedback Output Signals
+//==========================================================
+output           vidu_idu_fp_full;                // FP queue full indication to IDU
+output           vidu_idu_vec_full;               // Vector queue full indication to IDU
+output           vidu_rtu_no_op;                  // No operation indication to RTU
+
+//==========================================================
+//                    VPU Instruction Dispatch Signals
+//==========================================================
+output           vidu_vpu_vid_fp_inst_dp_vld;     // FP instruction datapath valid to VPU
+output  [5  :0]  vidu_vpu_vid_fp_inst_dst_reg;    // FP instruction destination register to VPU
+output           vidu_vpu_vid_fp_inst_dst_vld;    // FP instruction destination valid to VPU
+output           vidu_vpu_vid_fp_inst_dste_vld;   // FP instruction destination E register valid to VPU
+output  [4  :0]  vidu_vpu_vid_fp_inst_dstf_reg;   // FP instruction destination F register to VPU
+output           vidu_vpu_vid_fp_inst_dstf_vld;   // FP instruction destination F register valid to VPU
+output  [9  :0]  vidu_vpu_vid_fp_inst_eu;         // FP instruction execution unit to VPU
+output  [19 :0]  vidu_vpu_vid_fp_inst_func;       // FP instruction function code to VPU
+output           vidu_vpu_vid_fp_inst_gateclk_vld; // FP instruction gate clock valid to VPU
+output  [63 :0]  vidu_vpu_vid_fp_inst_src1_data;  // FP instruction source1 data to VPU
+output  [63 :0]  vidu_vpu_vid_fp_inst_srcf0_data; // FP instruction source F0 data to VPU
+output  [63 :0]  vidu_vpu_vid_fp_inst_srcf1_data; // FP instruction source F1 data to VPU
+output  [63 :0]  vidu_vpu_vid_fp_inst_srcf2_data; // FP instruction source F2 data to VPU
+output           vidu_vpu_vid_fp_inst_srcf2_rdy;  // FP instruction source F2 ready to VPU
+output           vidu_vpu_vid_fp_inst_srcf2_vld;  // FP instruction source F2 valid to VPU
+output           vidu_vpu_vid_fp_inst_vld;        // FP instruction valid to VPU
+
+//==========================================================
+//                    RTU Completion Signals
+//==========================================================
+output           vpu_rtu_ex1_cmplt;               // EX1 completion signal to RTU
+output           vpu_rtu_ex1_cmplt_dp;            // EX1 completion datapath signal to RTU
+output           vpu_rtu_ex1_fp_dirty;            // EX1 FP dirty flag to RTU
+output           vpu_rtu_ex1_vec_dirty;           // EX1 vector dirty flag to RTU           
 
 // &Regs; @27
 
