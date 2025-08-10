@@ -33,7 +33,6 @@ module c906_wrap(
     wire             tdt_dmi_pwrite;  
 
     // 内部信号定义  
-    wire             cpu_debug_port;  
     wire    [228:0]  core0_pad_dispatch_info;  
     wire             core0_pad_flush;  
     wire             core0_pad_ipend_b;  
@@ -129,7 +128,6 @@ module c906_wrap(
         .core0_pad_lpmd_b        (),  
         .core0_pad_retire        (core0_pad_retire0),  
         .core0_pad_retire_pc     (core0_pad_retire0_pc),  
-        .cpu_debug_port          (cpu_debug_port),  
         .pad_cpu_apb_base        (pad_cpu_apb_base),  
         .pad_cpu_rst_b           (pad_cpu_rst_b),  
         .pad_cpu_rvba            (pad_cpu_rvba),  
@@ -202,6 +200,8 @@ always @(posedge pll_core_cpuclk or negedge pad_cpu_rst_b) begin
         sys_apb_clk <= ~sys_apb_clk;  
 end  
   
+// this is Debug Transport Module (DTM), instantiated per RISCV core. connetcing Debug Host (jtag debugger, only 1) to 
+// the Debug Module (DM) of C906 (one DM one core). Each DM is a APB slave.
 tdt_dmi_top x_c906_dtm_top(
   .pad_tdt_dtm_jtag2_sel (1'b0              ),
   .pad_tdt_dtm_tap_en    (1'b1              ),
@@ -231,7 +231,6 @@ tdt_dmi_top x_c906_dtm_top(
 assign core0_pad_ipend_b = 1;
 assign core0_pad_wakeup_b = 1;
 assign cpu_pad_no_op = 0;
-// assign cpu_debug_port = 0;
 assign core0_pad_lpmd_b = 1;
 
 always@(posedge pll_core_cpuclk or negedge pad_cpu_rst_b)
