@@ -11,9 +11,8 @@ set HDL_PATH ${WORK_ROOT}/c906_core
 set TOP_MODULE_NAME openC906
 
 # TSMC 40nm library
-set DB_PATH /export/techlib/tsmc28hpc/logic/tcbn28hpcplusbwp12t40p140_180a/AN61001_20180514/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp12t40p140_180a
-set DB_NAME tcbn28hpcplusbwp12t40p140tt0p9v85c_ccs.db
-# set DB_NAME tcbn28hpcplusbwp12t40p140tt1v0p9v85c_ccs.db
+set DB_PATH /home/ic/tsmc28/logic/tcbn28hpcplusbwp12t40p140lvt_180a/AN61001_20180514/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp12t40p140lvt_180a
+set DB_NAME tcbn28hpcplusbwp12t40p140lvttt1v25c_ccs.db
 
 ################################################################################
 # Step 0: create directories for results and reports
@@ -39,7 +38,7 @@ set_app_var link_library "* $target_library"
 # Please do NOT import testbench or behavior memory model here.
 ################################################################################
 define_design_lib WORK -path ./WORK
-analyze -format verilog -vcs "-f $HDL_PATH/filelists/C906_asic_rtl.fl +libext+.v"
+analyze -format verilog -vcs "-f $HDL_PATH/filelists/c906_syn.fl +libext+.v"
 
 elaborate ${TOP_MODULE_NAME}; # top module name
 
