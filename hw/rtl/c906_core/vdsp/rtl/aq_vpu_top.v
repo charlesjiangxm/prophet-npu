@@ -513,6 +513,7 @@ wire            vpu_vlsu_fp_wb_vld;
 //           .vpu_group_0_xx_ex1_srcv1 (vpu_group_0_xx_ex1_vfp_srcv1)); @72
 // &ConnRule(s/group_0/group_1/); @75
 // &Instance("aq_falu_top"); @76
+// vector floating point ALU
 aq_falu_top  x_aq_falu_top (
   .cp0_vpu_icg_en                    (cp0_vpu_icg_en                   ),
   .cp0_vpu_xx_bf16                   (cp0_vpu_xx_bf16                  ),
@@ -550,6 +551,7 @@ aq_falu_top  x_aq_falu_top (
 
 // &ConnRule(s/group_1/group_2/); @78
 // &Instance("aq_fcnvt_top"); @79
+// floating point conversion unit
 aq_fcnvt_top  x_aq_fcnvt_top (
   .cp0_vpu_icg_en                (cp0_vpu_icg_en               ),
   .cp0_vpu_xx_bf16               (cp0_vpu_xx_bf16              ),
@@ -577,6 +579,7 @@ aq_fcnvt_top  x_aq_fcnvt_top (
 
 // &ConnRule(s/group_1/group_2/); @81
 // &Instance("aq_fspu_top"); @82
+// floating point special function unit
 aq_fspu_top  x_aq_fspu_top (
   .cp0_vpu_icg_en                (cp0_vpu_icg_en               ),
   .cp0_vpu_xx_bf16               (cp0_vpu_xx_bf16              ),
@@ -598,6 +601,7 @@ aq_fspu_top  x_aq_fspu_top (
 
 // &ConnRule(s/group_1/group_3/); @84
 // &Instance("aq_fdsu_top"); @85
+// floating point division and square root unit
 aq_fdsu_top  x_aq_fdsu_top (
   .cp0_vpu_icg_en                (cp0_vpu_icg_en               ),
   .cp0_vpu_xx_bf16               (cp0_vpu_xx_bf16              ),
@@ -630,6 +634,7 @@ aq_fdsu_top  x_aq_fdsu_top (
 
 
 // &Instance("aq_vfmau_top","x_aq_vfmau_top"); @87
+// vector floating point multiply-add unit
 aq_vfmau_top  x_aq_vfmau_top (
   .cp0_vpu_icg_en                    (cp0_vpu_icg_en                   ),
   .cp0_vpu_xx_bf16                   (cp0_vpu_xx_bf16                  ),
@@ -677,6 +682,7 @@ assign viq1_xx_ex3_vint_pipedown     = 1'b0;
 assign viq1_xx_ex5_stall             = 1'b0;
 
 // &Instance("aq_vlsu_top","x_aq_vlsu_top"); @96
+// vector load/store unit
 aq_vlsu_top  x_aq_vlsu_top (
   .cp0_vpu_icg_en                 (cp0_vpu_icg_en                ),
   .cpurst_b                       (cpurst_b                      ),
@@ -742,6 +748,7 @@ aq_vlsu_top  x_aq_vlsu_top (
 
 
 // &Instance("aq_vpu_fwd_wb_rbus", "x_aq_vpu_fwd_wb_rbus"); @98
+// vector unit forward write-back resource bus
 aq_vpu_fwd_wb_rbus  x_aq_vpu_fwd_wb_rbus (
   .cp0_vpu_icg_en                 (cp0_vpu_icg_en                ),
   .cp0_yy_clk_en                  (cp0_yy_clk_en                 ),
@@ -749,13 +756,16 @@ aq_vpu_fwd_wb_rbus  x_aq_vpu_fwd_wb_rbus (
   .forever_cpuclk                 (forever_cpuclk                ),
   .ifu_vpu_warm_up                (ifu_vpu_warm_up               ),
   .pad_yy_icg_scan_en             (pad_yy_icg_scan_en            ),
+  // write back grant
   .rbus_vfdsu_fpr_wb_grnt         (rbus_vfdsu_fpr_wb_grnt        ),
   .rbus_viq0_ex3_fpr_wb_grnt      (rbus_viq0_ex3_fpr_wb_grnt     ),
   .rbus_viq0_ex3_gpr_wb_grnt      (rbus_viq0_ex3_gpr_wb_grnt     ),
   .rbus_viq0_ex4_fpr_wb_grnt      (rbus_viq0_ex4_fpr_wb_grnt     ),
   .rbus_viq0_ex5_fpr_wb_grnt      (rbus_viq0_ex5_fpr_wb_grnt     ),
   .rtu_vpu_gpr_wb_grnt            (rtu_vpu_gpr_wb_grnt           ),
+  // flush signal
   .rtu_yy_xx_async_flush          (rtu_yy_xx_async_flush         ),
+  // write back data of execution unit
   .vfalu_vpu_ex3_fpr_result       (vfalu_vpu_ex3_fpr_result      ),
   .vfcvt_vpu_ex3_fpr_result       (vfcvt_vpu_ex3_fpr_result      ),
   .vfdsu_rbus_fflags              (vfdsu_rbus_fflags             ),
@@ -812,9 +822,11 @@ aq_vpu_fwd_wb_rbus  x_aq_vpu_fwd_wb_rbus (
   .vpu_rtu_gpr_wb_req             (vpu_rtu_gpr_wb_req            ),
   .vpu_rtu_no_op                  (vpu_rtu_no_op                 ),
   .vpu_vfdsu_ex1_sel              (vpu_vfdsu_ex1_sel             ),
+  // data forwarding
   .vpu_vidu_fp_fwd_data           (vpu_vidu_fp_fwd_data          ),
   .vpu_vidu_fp_fwd_reg            (vpu_vidu_fp_fwd_reg           ),
   .vpu_vidu_fp_fwd_vld            (vpu_vidu_fp_fwd_vld           ),
+
   .vpu_vidu_fp_wb_data            (vpu_vidu_fp_wb_data           ),
   .vpu_vidu_fp_wb_reg             (vpu_vidu_fp_wb_reg            ),
   .vpu_vidu_fp_wb_vld             (vpu_vidu_fp_wb_vld            ),
