@@ -10,7 +10,31 @@ module openC906(
   input   [39 :0]  pad_cpu_rvba,
   output           tdt_dm_pad_hartreset_n,
   output           tdt_dm_pad_ndmreset_n,
-  // axi master: c906 to interconnect
+  // axi master: aw channel - send write addr
+  output           biu_pad_awvalid,
+  input            pad_biu_awready,
+  output  [39 :0]  biu_pad_awaddr,
+  output  [1  :0]  biu_pad_awburst,
+  output  [3  :0]  biu_pad_awcache,
+  output  [7  :0]  biu_pad_awid,
+  output  [7  :0]  biu_pad_awlen,
+  output           biu_pad_awlock,
+  output  [2  :0]  biu_pad_awprot,
+  output  [2  :0]  biu_pad_awsize,
+  // axi master: w channel - send write data
+  output           biu_pad_wvalid,
+  input            pad_biu_wready,
+  output  [127:0]  biu_pad_wdata,
+  output           biu_pad_wlast,
+  output  [15 :0]  biu_pad_wstrb,
+  // axi master: b channel - slave response to master
+  input            pad_biu_bvalid,
+  output           biu_pad_bready,
+  input   [1  :0]  pad_biu_bresp,
+  input   [7  :0]  pad_biu_bid,
+  // axi master: ar channel - send read addr
+  output           biu_pad_arvalid,
+  input            pad_biu_arready,
   output  [39 :0]  biu_pad_araddr, // ar ports
   output  [1  :0]  biu_pad_arburst,
   output  [3  :0]  biu_pad_arcache,
@@ -19,34 +43,13 @@ module openC906(
   output           biu_pad_arlock,
   output  [2  :0]  biu_pad_arprot,
   output  [2  :0]  biu_pad_arsize,
-  output           biu_pad_arvalid,
-  input            pad_biu_arready,
-  output  [39 :0]  biu_pad_awaddr, // aw ports
-  output  [1  :0]  biu_pad_awburst,
-  output  [3  :0]  biu_pad_awcache,
-  output  [7  :0]  biu_pad_awid,
-  output  [7  :0]  biu_pad_awlen,
-  output           biu_pad_awlock,
-  output  [2  :0]  biu_pad_awprot,
-  output  [2  :0]  biu_pad_awsize,
-  output           biu_pad_awvalid,
-  input            pad_biu_awready,
-  output  [127:0]  biu_pad_wdata, // w ports
-  output           biu_pad_wlast,
-  output  [15 :0]  biu_pad_wstrb,
-  output           biu_pad_wvalid,
-  input            pad_biu_wready,
-  // axi slave: interconnect to c906
-  output           biu_pad_bready, // b ports
-  input   [7  :0]  pad_biu_bid,
-  input   [1  :0]  pad_biu_bresp,
-  input            pad_biu_bvalid,
-  output           biu_pad_rready, // r ports
+  // axi master: r channel - slave sends the rdata to master
+  input            pad_biu_rvalid,
+  output           biu_pad_rready,
+  input   [1  :0]  pad_biu_rresp,
   input   [127:0]  pad_biu_rdata,
   input   [7  :0]  pad_biu_rid,
   input            pad_biu_rlast,
-  input   [1  :0]  pad_biu_rresp,
-  input            pad_biu_rvalid,
   // interrupt related (apb clk domain)
   input   [39 :0]  pad_cpu_apb_base,
   input   [239:0]  pad_plic_int_cfg, // 1: pulse interrupt, 0: level interrupt
