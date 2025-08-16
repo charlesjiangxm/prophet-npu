@@ -1,4 +1,4 @@
--f ../filelists/C906_asic_rtl.fl
+-f ../filelists/C906_asic_sim.fl
 -f ../filelists/tdt_dmi_top_rtl.fl
 -f ../filelists/soc.fl
 ../tb/tb.sv
