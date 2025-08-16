@@ -48,7 +48,7 @@ set_app_var link_library "* $target_library $SRAM_LIBS"
 # Step 2: import design
 ################################################################################
 define_design_lib WORK -path ./WORK
-analyze -format verilog -vcs "-f ./c906_asic_syn.fl +libext+.v"
+analyze -format verilog -vcs "-f ${WORK_ROOT}/filelist/c906_core_asic.fl +libext+.v"
 
 elaborate ${TOP_MODULE_NAME}; # top module name
 

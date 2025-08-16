@@ -1,0 +1,5 @@
+-f ${CODE_BASE_PATH}/c906_core_asic.fl
+-f ${CODE_BASE_PATH}/c906_tdt_dmi_top.fl
+-f ${CODE_BASE_PATH}/c906_soc.fl
+tb.sv
+uart_mnt.v
