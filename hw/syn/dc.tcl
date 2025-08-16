@@ -10,19 +10,9 @@ set WORK_ROOT $env(CODE_BASE_PATH)
 set HDL_PATH ${WORK_ROOT}/c906_core
 set TOP_MODULE_NAME openC906
 
-# TSMC 28nm logic library
+# TSMC 40nm library
 set DB_PATH /home/ic/tsmc28/logic/tcbn28hpcplusbwp12t40p140lvt_180a/AN61001_20180514/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp12t40p140lvt_180a
 set DB_NAME tcbn28hpcplusbwp12t40p140lvttt1v25c_ccs.db
-set SRAM_LIBS "
-/home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb1024x16m4swbaso_180a/NLDM/ts1n28hpcplvtb1024x16m4swbaso_180a_tt1v25c.db
-/home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb1024x64m4swbaso_180a/NLDM/ts1n28hpcplvtb1024x64m4swbaso_180a_tt1v25c.db
-/home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb128x8m4swbaso_180a/NLDM/ts1n28hpcplvtb128x8m4swbaso_180a_tt1v25c.db
-/home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb2048x32m4swbaso_180a/NLDM/ts1n28hpcplvtb2048x32m4swbaso_180a_tt1v25c.db
-/home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb256x59m4swbaso_180a/NLDM/ts1n28hpcplvtb256x59m4swbaso_180a_tt1v25c.db
-/home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb64x58m4swbaso_180a/NLDM/ts1n28hpcplvtb64x58m4swbaso_180a_tt1v25c.db
-/home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb64x88m4swbaso_180a/NLDM/ts1n28hpcplvtb64x88m4swbaso_180a_tt1v25c.db
-/home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb64x98m4swbaso_180a/NLDM/ts1n28hpcplvtb64x98m4swbaso_180a_tt1v25c.db
-"
 
 ################################################################################
 # Step 0: create directories for results and reports
@@ -31,24 +21,24 @@ file mkdir reports; # store area, timing, power reports
 file mkdir results; # store design
 
 ################################################################################
-# Step 1: library setup
+# Step 1: digital standard cell library set up
+# You should specify the following paths accordingly:
+# - search_path
+# - target_library
+# - link_library
 ################################################################################
-# Update search_path
 set_app_var search_path ". ${DB_PATH} ${HDL_PATH} $search_path"
-foreach sram $SRAM_LIBS {
-    set dir [file dirname $sram]
-    lappend search_path $dir
-}
-
-# Set target and link libraries
 set_app_var target_library "${DB_NAME}"
-set_app_var link_library "* $target_library $SRAM_LIBS"
+set_app_var link_library "* $target_library"
 
 ################################################################################
 # Step 2: import design
+# You should specify the HDL files for your design accordingly.
+# Note: the HDL files should be located in the search_path you defined above.
+# Please do NOT import testbench or behavior memory model here.
 ################################################################################
 define_design_lib WORK -path ./WORK
-analyze -format verilog -vcs "-f ./c906_asic_syn.fl +libext+.v"
+analyze -format verilog -vcs "-f $HDL_PATH/filelists/c906_syn.fl +libext+.v"
 
 elaborate ${TOP_MODULE_NAME}; # top module name
 
@@ -57,10 +47,18 @@ write -hierarchy -format ddc -output results/${TOP_MODULE_NAME}.unmapped.ddc
 
 ################################################################################
 # Step 3: constrain your design
+# You should specify the critical path, the input & output delay and the
+# environment attribute of your design, so that Design Compiler can correctly
+# synthesize your design with the required specfication.
 ################################################################################
+# All the constraints are written in the following tcl script
 source dut.constraints.tcl
 
+################################################################################
 # Create default path groups
+#
+# Seperate these paths can help improve optimization results.
+################################################################################
 set ports_clock_root \
   [filter_collection [get_attribute [get_clocks] sources] object_class==port]
 group_path -name REGOUT -to [all_outputs]
@@ -69,26 +67,46 @@ group_path -name REGIN -from [remove_from_collection [all_inputs] \
 group_path -name FEEDTHROUGH -from \
   [remove_from_collection [all_inputs] ${ports_clock_root}] -to [all_outputs]
 
+################################################################################
+# Apply Additional Optimization Constraints
+################################################################################
 # Prevent assignment statements in the Verilog netlist.
 set_fix_multiple_port_nets -all -buffer_constants
 
-# Check for design errors
+################################################################################
+# Check for Design Errors. It is a good habit to check the design before you run
+# the synthesis.
+################################################################################
 check_design -summary
-check_design > reports/${TOP_MODULE_NAME}.check_design.rpt
+check_design > reports/${TOP_MODULE_NAME}.check_design.rpt; # dump to the file
 
 ################################################################################
 # Step 4: compile the design
+# There exits lots of option for compile command. Please check the manual of
+# compile for further info.
 ################################################################################
 compile_ultra
 
-# Optional: keep hierarchy for debug
-# compile_ultra -no_autoungroup
+################################################################################
+# Note: compile_ultra does not work for some open source libraries, i.e. Nangate
+# since there are some cells missing for these libraries.
+# Sol: use compile instead. You can use compile_ultra for the commerial library
+# such TSMC45nm, which has a complete set of gates supported.
+#
+# compile_ultra -no_autoungroup; # keep hierarchy for the purpose of debug
+################################################################################
 
-# High-effort area optimization
+# High-effort area optimization which improves the area without degrading the
+# timing or leakage of the compiled design
 optimize_netlist -area
 
 ################################################################################
 # Step 5: write out final design and reports
+# The files include:
+# - .ddc: binary format used for subsequent Design Compiler sessions
+# - .v: Verilog netlist for gate-level simulation and P&R
+# - .sdf: SDF backannotated file containing gate and net latency
+# - .sdc: SDC constraints for ASCII flow
 ################################################################################
 change_names -rules verilog -hierarchy
 
