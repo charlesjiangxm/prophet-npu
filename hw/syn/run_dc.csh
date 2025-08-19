@@ -8,7 +8,8 @@ envsubst < ${CODE_BASE_PATH}/filelist/c906_core_asic.fl > ${CODE_BASE_PATH}/file
 grep -v '/sram/' ${CODE_BASE_PATH}/filelist/c906_core_asic.tmp.fl > ${CODE_BASE_PATH}/filelist/c906_core_asic.syn.fl
 
 # run dc
-dc_shell -f dc.tcl | tee -i dc.log
+echo "running dc synthesis, the log is in dc.log"
+dc_shell -f dc.tcl |& tee -i dc.log
 
 # remove tmp file
 rm -f ${CODE_BASE_PATH}/filelist/c906_core_asic.*.fl

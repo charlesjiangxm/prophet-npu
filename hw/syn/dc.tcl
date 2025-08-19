@@ -1,48 +1,86 @@
 ################################################################################
-# Filename: dc.tcl
-# Author: ZHU Jingyang
-# Email: jzhuak@connect.ust.hk
-# Affiliation: Hong Kong University of Science and Technology
-# -------------------------------------------------------------------------------
-# This is the template Design Compiler script for ELEC5160/EESM5020.
+# User configuration
 ################################################################################
-set WORK_ROOT $env(CODE_BASE_PATH)
-set HDL_PATH ${WORK_ROOT}/c906_core
+set WORK_ROOT       $env(CODE_BASE_PATH)
+set HDL_PATH        ${WORK_ROOT}/c906_core
 set TOP_MODULE_NAME openC906
 
-# TSMC 28nm logic library
+# Logic library (TSMC 28nm LVT)
 set DB_PATH /home/ic/tsmc28/logic/tcbn28hpcplusbwp12t40p140lvt_180a/AN61001_20180514/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp12t40p140lvt_180a
 set DB_NAME tcbn28hpcplusbwp12t40p140lvttt1v25c_ccs.db
-set SRAM_LIBS "
-/home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb1024x16m4swbaso_180a/NLDM/ts1n28hpcplvtb1024x16m4swbaso_180a_tt1v25c.db
-/home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb1024x64m4swbaso_180a/NLDM/ts1n28hpcplvtb1024x64m4swbaso_180a_tt1v25c.db
-/home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb128x8m4swbaso_180a/NLDM/ts1n28hpcplvtb128x8m4swbaso_180a_tt1v25c.db
-/home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb2048x32m4swbaso_180a/NLDM/ts1n28hpcplvtb2048x32m4swbaso_180a_tt1v25c.db
-/home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb256x59m4swbaso_180a/NLDM/ts1n28hpcplvtb256x59m4swbaso_180a_tt1v25c.db
-/home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb64x58m4swbaso_180a/NLDM/ts1n28hpcplvtb64x58m4swbaso_180a_tt1v25c.db
-/home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb64x88m4swbaso_180a/NLDM/ts1n28hpcplvtb64x88m4swbaso_180a_tt1v25c.db
-/home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb64x98m4swbaso_180a/NLDM/ts1n28hpcplvtb64x98m4swbaso_180a_tt1v25c.db
-"
+
+# SRAM timing models (NLDM views)
+set SRAM_LIBS [list \
+  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb1024x16m4swbaso_180a/NLDM/ts1n28hpcplvtb1024x16m4swbaso_180a_tt1v25c.db \
+  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb1024x64m4swbaso_180a/NLDM/ts1n28hpcplvtb1024x64m4swbaso_180a_tt1v25c.db \
+  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb128x8m4swbaso_180a/NLDM/ts1n28hpcplvtb128x8m4swbaso_180a_tt1v25c.db \
+  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb2048x32m4swbaso_180a/NLDM/ts1n28hpcplvtb2048x32m4swbaso_180a_tt1v25c.db \
+  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb256x59m4swbaso_180a/NLDM/ts1n28hpcplvtb256x59m4swbaso_180a_tt1v25c.db \
+  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb64x58m4swbaso_180a/NLDM/ts1n28hpcplvtb64x58m4swbaso_180a_tt1v25c.db \
+  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb64x88m4swbaso_180a/NLDM/ts1n28hpcplvtb64x88m4swbaso_180a_tt1v25c.db \
+  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb64x98m4swbaso_180a/NLDM/ts1n28hpcplvtb64x98m4swbaso_180a_tt1v25c.db \
+]
 
 ################################################################################
-# Step 0: create directories for results and reports
+# Step 0: create directories
 ################################################################################
-file mkdir reports; # store area, timing, power reports
-file mkdir results; # store design
+file mkdir reports   ;# timing/area/power reports
+file mkdir results   ;# synthesized netlist and constraints
 
 ################################################################################
 # Step 1: library setup
 ################################################################################
-# Update search_path
-set_app_var search_path ". ${DB_PATH} ${HDL_PATH} $search_path"
-foreach sram $SRAM_LIBS {
-    set dir [file dirname $sram]
-    lappend search_path $dir
-}
+# set library
+set search_path [list . \
+  /home/ic/tsmc28/logic/tcbn28hpcplusbwp12t40p140lvt_180a/AN61001_20180514/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp12t40p140lvt_180a/ \
+  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb1024x16m4swbaso_180a/NLDM/ \
+  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb1024x64m4swbaso_180a/NLDM/ \
+  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb128x8m4swbaso_180a/NLDM/ \
+  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb2048x32m4swbaso_180a/NLDM/ \
+  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb256x59m4swbaso_180a/NLDM/ \
+  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb64x58m4swbaso_180a/NLDM/ \
+  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb64x88m4swbaso_180a/NLDM/ \
+  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb64x98m4swbaso_180a/NLDM/ \
+]
+set target_library [list tcbn28hpcplusbwp12t40p140lvttt1v25c_ccs.db \
+  ts1n28hpcplvtb1024x16m4swbaso_180a_tt1v25c.db \
+  ts1n28hpcplvtb1024x64m4swbaso_180a_tt1v25c.db \
+  ts1n28hpcplvtb128x8m4swbaso_180a_tt1v25c.db \
+  ts1n28hpcplvtb2048x32m4swbaso_180a_tt1v25c.db \
+  ts1n28hpcplvtb256x59m4swbaso_180a_tt1v25c.db \
+  ts1n28hpcplvtb64x58m4swbaso_180a_tt1v25c.db \
+  ts1n28hpcplvtb64x88m4swbaso_180a_tt1v25c.db \
+  ts1n28hpcplvtb64x98m4swbaso_180a_tt1v25c.db \
+]
+set link_library [list {*} \
+  tcbn28hpcplusbwp12t40p140lvttt1v25c_ccs.db \
+  ts1n28hpcplvtb1024x16m4swbaso_180a_tt1v25c.db \
+  ts1n28hpcplvtb1024x64m4swbaso_180a_tt1v25c.db \
+  ts1n28hpcplvtb128x8m4swbaso_180a_tt1v25c.db \
+  ts1n28hpcplvtb2048x32m4swbaso_180a_tt1v25c.db \
+  ts1n28hpcplvtb256x59m4swbaso_180a_tt1v25c.db \
+  ts1n28hpcplvtb64x58m4swbaso_180a_tt1v25c.db \
+  ts1n28hpcplvtb64x88m4swbaso_180a_tt1v25c.db \
+  ts1n28hpcplvtb64x98m4swbaso_180a_tt1v25c.db \
+]
 
-# Set target and link libraries
-set_app_var target_library "${DB_NAME}"
-set_app_var link_library "* $target_library $SRAM_LIBS"
+# naming rules
+define_name_rules lab_vlog   -type  port  \
+        -allowed {a-zA-Z0-9[]_} \
+        -equal_ports_nets    \
+        -first_restricted  "0-9_"  \
+        -max_length   256
+define_name_rules lab_vlog   -type  net  \
+        -allowed "a-zA-Z0-9_" \
+        -equal_ports_nets    \
+        -first_restricted  "0-9_"  \
+        -max_length   256
+define_name_rules lab_vlog   -type  cell  \
+        -allowed "a-zA-Z0-9_" \
+        -first_restricted  "0-9_"  \
+        -map {{{"\[","_","\]",""},{"\[","_"}}}  \
+        -max_length   256
+define_name_rules slash   -restricted  {/}  -replace  {_}
 
 ################################################################################
 # Step 2: import design
