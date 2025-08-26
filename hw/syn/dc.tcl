@@ -4,26 +4,6 @@
 set WORK_ROOT       $env(CODE_BASE_PATH)
 set HDL_PATH        ${WORK_ROOT}/c906_core
 set TOP_MODULE_NAME openC906
-
-# Logic library (TSMC 28nm LVT)
-set DB_PATH /home/ic/tsmc28/logic/tcbn28hpcplusbwp12t40p140lvt_180a/AN61001_20180514/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp12t40p140lvt_180a
-set DB_NAME tcbn28hpcplusbwp12t40p140lvttt1v25c_ccs.db
-
-# SRAM timing models (NLDM views)
-set SRAM_LIBS [list \
-  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb1024x16m4swbaso_180a/NLDM/ts1n28hpcplvtb1024x16m4swbaso_180a_tt1v25c.db \
-  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb1024x64m4swbaso_180a/NLDM/ts1n28hpcplvtb1024x64m4swbaso_180a_tt1v25c.db \
-  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb128x8m4swbaso_180a/NLDM/ts1n28hpcplvtb128x8m4swbaso_180a_tt1v25c.db \
-  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb2048x32m4swbaso_180a/NLDM/ts1n28hpcplvtb2048x32m4swbaso_180a_tt1v25c.db \
-  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb256x59m4swbaso_180a/NLDM/ts1n28hpcplvtb256x59m4swbaso_180a_tt1v25c.db \
-  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb64x58m4swbaso_180a/NLDM/ts1n28hpcplvtb64x58m4swbaso_180a_tt1v25c.db \
-  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb64x88m4swbaso_180a/NLDM/ts1n28hpcplvtb64x88m4swbaso_180a_tt1v25c.db \
-  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb64x98m4swbaso_180a/NLDM/ts1n28hpcplvtb64x98m4swbaso_180a_tt1v25c.db \
-]
-
-################################################################################
-# Step 0: create directories
-################################################################################
 file mkdir reports   ;# timing/area/power reports
 file mkdir results   ;# synthesized netlist and constraints
 
@@ -32,17 +12,10 @@ file mkdir results   ;# synthesized netlist and constraints
 ################################################################################
 # set library
 set search_path [list . \
-  /home/ic/tsmc28/logic/tcbn28hpcplusbwp12t40p140lvt_180a/AN61001_20180514/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp12t40p140lvt_180a/ \
-  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb1024x16m4swbaso_180a/NLDM/ \
-  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb1024x64m4swbaso_180a/NLDM/ \
-  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb128x8m4swbaso_180a/NLDM/ \
-  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb2048x32m4swbaso_180a/NLDM/ \
-  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb256x59m4swbaso_180a/NLDM/ \
-  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb64x58m4swbaso_180a/NLDM/ \
-  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb64x88m4swbaso_180a/NLDM/ \
-  /home/ic/tsmc28/MC2_2012.02.00.d/Memory/tsn28hpcpd127spsram_20120200_180a/AN61001_20180416/TSMCHOME/sram/Compiler/tsn28hpcpd127spsram_20120200_180a/ts1n28hpcplvtb64x98m4swbaso_180a/NLDM/ \
+  /home/ic/tsmc28/db_c906/ \
 ]
-set target_library [list tcbn28hpcplusbwp12t40p140lvttt1v25c_ccs.db \
+set target_library [list tcbn28hpcplusbwp12t40p140ssg0p9v0c_ccs.db \
+  tcbn28hpcplusbwp12t40p140hvttt0p9v25c_ccs.db \
   ts1n28hpcplvtb1024x16m4swbaso_180a_tt1v25c.db \
   ts1n28hpcplvtb1024x64m4swbaso_180a_tt1v25c.db \
   ts1n28hpcplvtb128x8m4swbaso_180a_tt1v25c.db \
@@ -53,7 +26,8 @@ set target_library [list tcbn28hpcplusbwp12t40p140lvttt1v25c_ccs.db \
   ts1n28hpcplvtb64x98m4swbaso_180a_tt1v25c.db \
 ]
 set link_library [list {*} \
-  tcbn28hpcplusbwp12t40p140lvttt1v25c_ccs.db \
+  tcbn28hpcplusbwp12t40p140ssg0p9v0c_ccs.db \
+  tcbn28hpcplusbwp12t40p140hvttt0p9v25c_ccs.db \
   ts1n28hpcplvtb1024x16m4swbaso_180a_tt1v25c.db \
   ts1n28hpcplvtb1024x64m4swbaso_180a_tt1v25c.db \
   ts1n28hpcplvtb128x8m4swbaso_180a_tt1v25c.db \
@@ -89,6 +63,9 @@ define_design_lib WORK -path ./WORK
 analyze -format verilog -vcs "-f ${WORK_ROOT}/filelist/c906_core_asic.syn.fl +libext+.v"
 
 elaborate ${TOP_MODULE_NAME}; # top module name
+
+# load upf
+load_upf openC906.upf
 
 # store the unmapped results
 write -hierarchy -format ddc -output results/${TOP_MODULE_NAME}.unmapped.ddc

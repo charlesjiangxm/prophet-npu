@@ -2,7 +2,7 @@
 # Clocks
 ################################################################################
 # Core clock: pll_core_cpuclk @ 500 MHz (2.0 ns)
-create_clock -name pll_core_cpuclk -period 0.7 [get_ports pll_core_cpuclk]
+create_clock -name pll_core_cpuclk -period 0.5 [get_ports pll_core_cpuclk]
 
 # APB/Debug clock: sys_apb_clk @ 100 MHz (10.0 ns)
 create_clock -name sys_apb_clk -period 10.0 [get_ports sys_apb_clk]
