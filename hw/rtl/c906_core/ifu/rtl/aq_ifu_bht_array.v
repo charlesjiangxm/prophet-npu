@@ -80,14 +80,6 @@ gated_clk_cell  x_bht_icg_cell (
   .pad_yy_icg_scan_en (pad_yy_icg_scan_en)
 );
 
-// &Connect( .clk_in      (forever_cpuclk), @39
-//           .external_en (1'b0          ), @40
-//           .global_en   (cp0_yy_clk_en ), @41
-//           .module_en   (cp0_ifu_icg_en), @42
-//           .local_en    (bht_icg_en    ), @43
-//           .clk_out     (bht_clk       ) @44
-//          ); @45
-
 //------------------------------------------------
 // 2. Instance Memory Cell
 //------------------------------------------------
@@ -95,10 +87,6 @@ assign bht_cen_b       = !bht_cen;
 assign bht_gwen_b      = !(|bht_wen[15:0]);
 assign bht_bwen_b[15:0] = ~bht_wen[15:0];
 
-// &Instance("aq_spsram_128x16","x_aq_spsram_128x16"); @55
-// &Instance("aq_spsram_256x16","x_aq_spsram_256x16"); @58
-// &Instance("aq_spsram_512x16","x_aq_spsram_512x16"); @61
-// &Instance("aq_spsram_1024x16","x_aq_spsram_1024x16"); @64
 aq_spsram_1024x16  x_aq_spsram_1024x16 (
   .A          (bht_idx   ),
   .CEN        (bht_cen_b ),
@@ -109,17 +97,6 @@ aq_spsram_1024x16  x_aq_spsram_1024x16 (
   .WEN        (bht_bwen_b)
 );
 
-// &Connect( @66
-//          .CLK    (bht_clk   ), @67
-//          .CEN    (bht_cen_b ), @68
-//          .GWEN   (bht_gwen_b), @69
-//          .WEN    (bht_bwen_b), @70
-//          .A      (bht_idx   ), @71
-//          .D      (bht_din   ), @72
-//          .Q      (bht_dout  ) @73
-//        ); @74
-
-// &ModuleEnd; @76
 endmodule
 
 

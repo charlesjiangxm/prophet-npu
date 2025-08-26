@@ -56,8 +56,6 @@ wire            pad_yy_icg_scan_en;
 
 parameter TAG_INDEX = `I_TAG_INDEX_WIDTH;
 
-// &Force("bus", "icache_tag_idx", 8, 0); @31
-
 //==========================================================
 // Icache Tag Array Module
 // 1. Instance ICG Cell
@@ -80,14 +78,6 @@ gated_clk_cell  x_icache_tag_icg_cell (
   .pad_yy_icg_scan_en (pad_yy_icg_scan_en)
 );
 
-// &Connect( .clk_in     (forever_cpuclk   ), @45
-//           .external_en(1'b0             ), @46
-//           .global_en  (cp0_yy_clk_en    ), @47
-//           .module_en  (1'b0             ), @48
-//           .local_en   (icache_tag_icg_en), @49
-//           .clk_out    (icache_tag_clk   ) @50
-//          ); @51
-
 //------------------------------------------------
 // 2. Transmit Port Signals
 //------------------------------------------------
@@ -105,9 +95,6 @@ assign icache_tag_index[TAG_INDEX-1:0] = icache_tag_idx[TAG_INDEX-1:0];
 //------------------------------------------------
 // 3. Instance Memory Cell 
 //------------------------------------------------
-// &Instance("aq_spsram_64x59", "x_aq_spsram_64x59"); @71
-// &Instance("aq_spsram_128x59", "x_aq_spsram_128x59"); @74
-// &Instance("aq_spsram_256x59", "x_aq_spsram_256x59"); @77
 aq_spsram_256x59  x_aq_spsram_256x59 (
   .A                 (icache_tag_index ),
   .CEN               (icache_tag_cen_b ),
@@ -118,17 +105,6 @@ aq_spsram_256x59  x_aq_spsram_256x59 (
   .WEN               (icache_tag_bwen_b)
 );
 
-// &Instance("aq_spsram_512x59", "x_aq_spsram_512x59"); @80
-// &Connect(.CLK    (icache_tag_clk   ), @82
-//          .CEN    (icache_tag_cen_b ), @83
-//          .GWEN   (icache_tag_gwen_b), @84
-//          .WEN    (icache_tag_bwen_b), @85
-//          .A      (icache_tag_index ), @86
-//          .D      (icache_tag_din   ), @87
-//          .Q      (icache_tag_dout  ) @88
-// ); @89
-
-// &ModuleEnd; @91
 endmodule
 
 

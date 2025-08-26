@@ -101,7 +101,6 @@ assign tag_cen_bank1    = tag_cen | ~(|tag_way[3:2]);
  //==========================================================
 //                 Instance of Gated Cell
 //==========================================================
-// &Instance("gated_clk_cell", "x_dcache_tag_gated_clk_bank0"); @65
 gated_clk_cell  x_dcache_tag_gated_clk_bank0 (
   .clk_in             (forever_cpuclk    ),
   .clk_out            (tag_clk_bank0     ),
@@ -112,16 +111,6 @@ gated_clk_cell  x_dcache_tag_gated_clk_bank0 (
   .pad_yy_icg_scan_en (pad_yy_icg_scan_en)
 );
 
-// &Connect( @66
-//   .clk_in               (forever_cpuclk      ), @67
-//   .clk_out              (tag_clk_bank0       ), @68
-//   .external_en          (1'b0                ), @69
-//   .global_en            (1'b1                ), @70
-//   .local_en             (tag_clk_en_bank0    ), @71
-//   .module_en            (cp0_lsu_icg_en      ) @72
-// ); @73
-
-// &Instance("gated_clk_cell", "x_dcache_tag_gated_clk_bank1"); @75
 gated_clk_cell  x_dcache_tag_gated_clk_bank1 (
   .clk_in             (forever_cpuclk    ),
   .clk_out            (tag_clk_bank1     ),
@@ -132,21 +121,9 @@ gated_clk_cell  x_dcache_tag_gated_clk_bank1 (
   .pad_yy_icg_scan_en (pad_yy_icg_scan_en)
 );
 
-// &Connect( @76
-//   .clk_in               (forever_cpuclk      ), @77
-//   .clk_out              (tag_clk_bank1       ), @78
-//   .external_en          (1'b0                ), @79
-//   .global_en            (1'b1                ), @80
-//   .local_en             (tag_clk_en_bank1    ), @81
-//   .module_en            (cp0_lsu_icg_en      ) @82
-// ); @83
-
 //==========================================================
 //              Instance dcache array
 //==========================================================
-// &Instance("aq_spsram_32x60", "x_aq_spsram_32x60_bank0");  @89
-// &Instance("aq_spsram_64x58", "x_aq_spsram_64x58_bank0");  @92
-// &Instance("aq_spsram_64x58", "x_aq_spsram_64x58_bank0");  @95
 aq_spsram_64x58  x_aq_spsram_64x58_bank0 (
   .A                  (tag_idx[11:6]     ),
   .CEN                (tag_cen_bank0     ),
@@ -157,20 +134,6 @@ aq_spsram_64x58  x_aq_spsram_64x58_bank0 (
   .WEN                (tag_wen_raw[57:0] )
 );
 
-// &Instance("aq_spsram_64x58", "x_aq_spsram_64x58_bank0");  @98
-// &Connect( @100
-//   .A              (tag_idx[D_TAG_INDEX_LEN+5:6]), @101
-//   .CEN            (tag_cen_bank0), @102
-//   .CLK            (tag_clk_bank0), @103
-//   .GWEN           (tag_gwen), @104
-//   .D              (tag_din_raw[2*D_TAG_TAG_LEN+1:0]), @105
-//   .Q              (tag_dout_raw[2*D_TAG_TAG_LEN+1:0]), @106
-//   .WEN            (tag_wen_raw[2*D_TAG_TAG_LEN+1:0]) @107
-// ); @108
-
-// &Instance("aq_spsram_32x60", "x_aq_spsram_32x60_bank1"); @111
-// &Instance("aq_spsram_64x58", "x_aq_spsram_64x58_bank1"); @114
-// &Instance("aq_spsram_64x58", "x_aq_spsram_64x58_bank1"); @117
 aq_spsram_64x58  x_aq_spsram_64x58_bank1 (
   .A                    (tag_idx[11:6]       ),
   .CEN                  (tag_cen_bank1       ),
@@ -181,18 +144,6 @@ aq_spsram_64x58  x_aq_spsram_64x58_bank1 (
   .WEN                  (tag_wen_raw[115:58] )
 );
 
-// &Instance("aq_spsram_64x58", "x_aq_spsram_64x58_bank1");  @120
-// &Connect( @122
-//   .A              (tag_idx[D_TAG_INDEX_LEN+5:6]), @123
-//   .CEN            (tag_cen_bank1), @124
-//   .CLK            (tag_clk_bank1), @125
-//   .GWEN           (tag_gwen), @126
-//   .D              (tag_din_raw[4*D_TAG_TAG_LEN+3:2*D_TAG_TAG_LEN+2]), @127
-//   .Q              (tag_dout_raw[4*D_TAG_TAG_LEN+3:2*D_TAG_TAG_LEN+2]), @128
-//   .WEN            (tag_wen_raw[4*D_TAG_TAG_LEN+3:2*D_TAG_TAG_LEN+2]) @129
-// ); @130
-
-// &ModuleEnd; @132
 endmodule
 
 

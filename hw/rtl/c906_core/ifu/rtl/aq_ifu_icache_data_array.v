@@ -239,9 +239,8 @@ assign icache_data0_idx[DATA_INDEX-1:0] = icache_data_idx_low[DATA_INDEX-1:0];
 assign icache_data0_din[31:0] = icache_data_wen[0] ? icache_data_din[95:64]
                                                    : icache_data_din[31:0];
 
-// &Instance("aq_spsram_512x32", "x_aq_spsram_512x32_3"); @138
-// &Instance("aq_spsram_1024x32", "x_aq_spsram_1024x32_3"); @141
-// &Instance("aq_spsram_2048x32", "x_aq_spsram_2048x32_3"); @144
+// TODO: add a module wrapper
+// TODO: set don't touch
 aq_spsram_2048x32  x_aq_spsram_2048x32_3 (
   .A                  (icache_data3_idx  ),
   .CEN                (icache_data3_cen_b),
@@ -252,20 +251,6 @@ aq_spsram_2048x32  x_aq_spsram_2048x32_3 (
   .WEN                (icache_data_bwen_b)
 );
 
-// &Instance("aq_spsram_4096x32", "x_aq_spsram_4096x32_3"); @147
-// &Connect( @149
-//   .A    (icache_data3_idx  ), @150
-//   .CEN  (icache_data3_cen_b), @151
-//   .CLK  (icache_data3_clk  ), @152
-//   .D    (icache_data3_din  ), @153
-//   .GWEN (icache_data_gwen_b), @154
-//   .Q    (icache_data3_dout ), @155
-//   .WEN  (icache_data_bwen_b) @156
-// ); @157
-
-// &Instance("aq_spsram_512x32", "x_aq_spsram_512x32_2"); @160
-// &Instance("aq_spsram_1024x32", "x_aq_spsram_1024x32_2"); @163
-// &Instance("aq_spsram_2048x32", "x_aq_spsram_2048x32_2"); @166
 aq_spsram_2048x32  x_aq_spsram_2048x32_2 (
   .A                  (icache_data2_idx  ),
   .CEN                (icache_data2_cen_b),
@@ -276,20 +261,6 @@ aq_spsram_2048x32  x_aq_spsram_2048x32_2 (
   .WEN                (icache_data_bwen_b)
 );
 
-// &Instance("aq_spsram_4096x32", "x_aq_spsram_4096x32_2"); @169
-// &Connect( @171
-//   .A    (icache_data2_idx  ), @172
-//   .CEN  (icache_data2_cen_b), @173
-//   .CLK  (icache_data2_clk  ), @174
-//   .D    (icache_data2_din  ), @175
-//   .GWEN (icache_data_gwen_b), @176
-//   .Q    (icache_data2_dout ), @177
-//   .WEN  (icache_data_bwen_b) @178
-// ); @179
-
-// &Instance("aq_spsram_512x32", "x_aq_spsram_512x32_1"); @182
-// &Instance("aq_spsram_1024x32", "x_aq_spsram_1024x32_1"); @185
-// &Instance("aq_spsram_2048x32", "x_aq_spsram_2048x32_1"); @188
 aq_spsram_2048x32  x_aq_spsram_2048x32_1 (
   .A                  (icache_data1_idx  ),
   .CEN                (icache_data1_cen_b),
@@ -300,20 +271,6 @@ aq_spsram_2048x32  x_aq_spsram_2048x32_1 (
   .WEN                (icache_data_bwen_b)
 );
 
-// &Instance("aq_spsram_4096x32", "x_aq_spsram_4096x32_1"); @191
-// &Connect( @193
-//   .A    (icache_data1_idx  ), @194
-//   .CEN  (icache_data1_cen_b), @195
-//   .CLK  (icache_data1_clk  ), @196
-//   .D    (icache_data1_din  ), @197
-//   .GWEN (icache_data_gwen_b), @198
-//   .Q    (icache_data1_dout ), @199
-//   .WEN  (icache_data_bwen_b) @200
-// ); @201
-
-// &Instance("aq_spsram_512x32", "x_aq_spsram_512x32_0"); @204
-// &Instance("aq_spsram_1024x32", "x_aq_spsram_1024x32_0"); @207
-// &Instance("aq_spsram_2048x32", "x_aq_spsram_2048x32_0"); @210
 aq_spsram_2048x32  x_aq_spsram_2048x32_0 (
   .A                  (icache_data0_idx  ),
   .CEN                (icache_data0_cen_b),
@@ -324,15 +281,5 @@ aq_spsram_2048x32  x_aq_spsram_2048x32_0 (
   .WEN                (icache_data_bwen_b)
 );
 
-// &Instance("aq_spsram_4096x32", "x_aq_spsram_4096x32_0"); @213
-// &Connect( @215
-//   .A    (icache_data0_idx  ), @216
-//   .CEN  (icache_data0_cen_b), @217
-//   .CLK  (icache_data0_clk  ), @218
-//   .D    (icache_data0_din  ), @219
-//   .GWEN (icache_data_gwen_b), @220
-//   .Q    (icache_data0_dout ), @221
-//   .WEN  (icache_data_bwen_b) @222
-// ); @223
 
 endmodule

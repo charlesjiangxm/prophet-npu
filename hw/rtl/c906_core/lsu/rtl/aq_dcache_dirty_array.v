@@ -56,9 +56,6 @@ wire    [7 :0]  dirty_wen;
 wire            forever_cpuclk;    
 wire            pad_yy_icg_scan_en; 
 
-
-// &Force("bus", "dirty_idx",13,0); @25
-
 //==========================================================
 //                 Instance of Gated Cell
 //==========================================================
@@ -73,21 +70,9 @@ gated_clk_cell  x_dcache_dirty_gated_clk (
   .pad_yy_icg_scan_en (pad_yy_icg_scan_en)
 );
 
-// &Connect( @31
-//   .clk_in               (forever_cpuclk      ), @32
-//   .clk_out              (dirty_clk           ), @33
-//   .external_en          (1'b0                ), @34
-//   .global_en            (1'b1                ), @35
-//   .local_en             (dirty_clk_en        ), @36
-//   .module_en            (cp0_lsu_icg_en      ) @37
-// ); @38
-
 //==========================================================
 //              Instance dcache array
 //==========================================================
-// &Instance("aq_spsram_32x8","x_aq_spsram_32x8"); @44
-// &Instance("aq_spsram_64x8","x_aq_spsram_64x8"); @47
-// &Instance("aq_spsram_128x8","x_aq_spsram_128x8"); @50
 aq_spsram_128x8  x_aq_spsram_128x8 (
   .A               (dirty_idx[12:6]),
   .CEN             (dirty_cen      ),
@@ -98,18 +83,6 @@ aq_spsram_128x8  x_aq_spsram_128x8 (
   .WEN             (dirty_wen      )
 );
 
-// &Instance("aq_spsram_256x8","x_aq_spsram_256x8");  @53
-// &Connect( @55
-//   .A              (dirty_idx[`D_DATA_INDEX_WIDTH+2:6]), @56
-//   .CEN            (dirty_cen            ), @57
-//   .CLK            (dirty_clk            ), @58
-//   .GWEN           (dirty_gwen           ), @59
-//   .D              (dirty_din            ), @60
-//   .Q              (dirty_dout           ), @61
-//   .WEN            (dirty_wen            ) @62
-// ); @63
-
-// &ModuleEnd; @65
 endmodule
 
 

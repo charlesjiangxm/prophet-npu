@@ -52,16 +52,9 @@ parameter ADDR_WIDTH = 6;
 parameter DATA_WIDTH = 88;
 parameter WE_WIDTH   = 88;
 
-// &Force("bus","Q",DATA_WIDTH-1,0); @34
-// &Force("bus","WEN",WE_WIDTH-1,0); @35
-// &Force("bus","A",ADDR_WIDTH-1,0); @36
-// &Force("bus","D",DATA_WIDTH-1,0); @37
-
-  //********************************************************
-  //*                        FPGA memory                   *
-  //********************************************************
-  //{WEN[135:132],WEN[131:99],WEN[98:66],WEN[65:33],WEN[32:0]}
-//   &Instance("aq_f_spsram_64x88"); @44
+//********************************************************
+//*                        FPGA memory                   *
+//********************************************************
 aq_f_spsram_64x88  x_aq_f_spsram_64x88 (
   .A    (A   ),
   .CEN  (CEN ),
@@ -72,10 +65,6 @@ aq_f_spsram_64x88  x_aq_f_spsram_64x88 (
   .WEN  (WEN )
 );
 
-//   &Instance("aq_tsmc_spsram_64x88"); @50
-//   &Instance("aq_umc_spsram_64x88"); @62
-
-// &ModuleEnd; @66
 endmodule
 
 
