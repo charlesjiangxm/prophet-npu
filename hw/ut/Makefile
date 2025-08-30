@@ -33,7 +33,7 @@ SIMULATOR_OPT := -sverilog -full64 -kdb -lca -debug_access +nospecify +notimingc
 SIMULATOR_DEF := +define+no_warning +define+TSMC_NO_WARNING  
 SIMULATOR_LOG := -l comp.vcs.log  
 
-SIM_FILELIST := $(SIM_FILELIST) -f ${CODE_BASE_PATH}/filelist/c906_core_asic.fl  
+SIM_FILELIST := $(SIM_FILELIST) -f ../filelists/ut_sim.fl  
 
 compile:  
 	@echo "  [THead-smart] Compiling smart now ... "  
