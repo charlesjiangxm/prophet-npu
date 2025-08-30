@@ -1,5 +1,5 @@
--f ${CODE_BASE_PATH}/c906_core_asic.fl
--f ${CODE_BASE_PATH}/c906_tdt_dmi_top.fl
--f ${CODE_BASE_PATH}/c906_soc.fl
-tb.sv
-uart_mnt.v
+-f ${CODE_BASE_PATH}/filelist/c906_core_fpga.fl
+-f ${CODE_BASE_PATH}/filelist/c906_tdt_dmi_top.fl
+-f ${CODE_BASE_PATH}/filelist/c906_soc.fl
+${CODE_BASE_PATH}/../ut/tb/tb.sv
+${CODE_BASE_PATH}/../ut/tb/uart_mnt.v
