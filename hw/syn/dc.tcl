@@ -14,8 +14,8 @@ file mkdir results   ;# synthesized netlist and constraints
 set search_path [list . \
   /home/ic/tsmc28/db_c906/ \
 ]
-set target_library [list tcbn28hpcplusbwp12t40p140ssg0p9v0c_ccs.db \
-  tcbn28hpcplusbwp12t40p140hvttt0p9v25c_ccs.db \
+set target_library [list tcbn28hpcplusbwp12t40p140cgssg0p9v0c_ccs.db \
+  tcbn28hpcplusbwp12t40p140ssg0p9v0c_ccs.db \
   ts1n28hpcplvtb1024x16m4swbaso_180a_tt1v25c.db \
   ts1n28hpcplvtb1024x64m4swbaso_180a_tt1v25c.db \
   ts1n28hpcplvtb128x8m4swbaso_180a_tt1v25c.db \
@@ -26,8 +26,8 @@ set target_library [list tcbn28hpcplusbwp12t40p140ssg0p9v0c_ccs.db \
   ts1n28hpcplvtb64x98m4swbaso_180a_tt1v25c.db \
 ]
 set link_library [list {*} \
+  tcbn28hpcplusbwp12t40p140cgssg0p9v0c_ccs.db \
   tcbn28hpcplusbwp12t40p140ssg0p9v0c_ccs.db \
-  tcbn28hpcplusbwp12t40p140hvttt0p9v25c_ccs.db \
   ts1n28hpcplvtb1024x16m4swbaso_180a_tt1v25c.db \
   ts1n28hpcplvtb1024x64m4swbaso_180a_tt1v25c.db \
   ts1n28hpcplvtb128x8m4swbaso_180a_tt1v25c.db \
@@ -65,7 +65,7 @@ analyze -format verilog -vcs "-f ${WORK_ROOT}/filelist/c906_core_asic.syn.fl +li
 elaborate ${TOP_MODULE_NAME}; # top module name
 
 # load upf
-load_upf openC906.upf
+# load_upf openC906.upf
 
 # store the unmapped results
 write -hierarchy -format ddc -output results/${TOP_MODULE_NAME}.unmapped.ddc
