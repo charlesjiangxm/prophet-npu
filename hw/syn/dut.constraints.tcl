@@ -37,7 +37,7 @@ set_false_path -from $rst_ports
 # Environment attributes
 ################################################################################
 # Output load model
-set_load 1.0 [all_outputs]
+set_load 0.1 [all_outputs]
 
 # Input transition time on all inputs except clock/reset
 set non_cr_inputs [remove_from_collection [all_inputs] $clk_ports]
