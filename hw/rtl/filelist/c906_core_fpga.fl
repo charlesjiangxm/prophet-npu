@@ -47,6 +47,7 @@ ${CODE_BASE_PATH}/c906_core/dtu/rtl/aq_dtu_trigger_module.v
 ${CODE_BASE_PATH}/c906_core/fpga/rtl/aq_f_spsram_1024x16.v
 ${CODE_BASE_PATH}/c906_core/fpga/rtl/aq_f_spsram_1024x64.v
 ${CODE_BASE_PATH}/c906_core/fpga/rtl/aq_f_spsram_128x8.v
+${CODE_BASE_PATH}/c906_core/fpga/rtl/aq_f_spsram_2048x32x4.v
 ${CODE_BASE_PATH}/c906_core/fpga/rtl/aq_f_spsram_2048x32.v
 ${CODE_BASE_PATH}/c906_core/fpga/rtl/aq_f_spsram_256x59.v
 ${CODE_BASE_PATH}/c906_core/fpga/rtl/aq_f_spsram_64x58.v

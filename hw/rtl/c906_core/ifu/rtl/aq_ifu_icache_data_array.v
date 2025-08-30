@@ -241,45 +241,16 @@ assign icache_data0_din[31:0] = icache_data_wen[0] ? icache_data_din[95:64]
 
 // TODO: add a module wrapper
 // TODO: set don't touch
-aq_spsram_2048x32  x_aq_spsram_2048x32_3 (
-  .A                  (icache_data3_idx  ),
-  .CEN                (icache_data3_cen_b),
-  .CLK                (icache_data3_clk  ),
-  .D                  (icache_data3_din  ),
-  .GWEN               (icache_data_gwen_b),
-  .Q                  (icache_data3_dout ),
-  .WEN                (icache_data_bwen_b)
+aq_spsram_2048x32xn # (
+  .N      (4                                                                               )
+) x_aq_spsram_2048x32x4 (
+  .A      ({icache_data3_idx,   icache_data2_idx,   icache_data1_idx,   icache_data0_idx  }),
+  .CEN    ({icache_data3_cen_b, icache_data2_cen_b, icache_data1_cen_b, icache_data0_cen_b}),
+  .CLK    ({icache_data3_clk,   icache_data2_clk,   icache_data1_clk,   icache_data0_clk  }),
+  .D      ({icache_data3_din,   icache_data2_din,   icache_data1_din,   icache_data0_din  }),
+  .GWEN   ({4{icache_data_gwen_b                                                         }}),
+  .Q      ({icache_data3_dout,  icache_data2_dout,  icache_data1_dout,  icache_data0_dout }),
+  .WEN    ({4{icache_data_bwen_b                                                         }})
 );
-
-aq_spsram_2048x32  x_aq_spsram_2048x32_2 (
-  .A                  (icache_data2_idx  ),
-  .CEN                (icache_data2_cen_b),
-  .CLK                (icache_data2_clk  ),
-  .D                  (icache_data2_din  ),
-  .GWEN               (icache_data_gwen_b),
-  .Q                  (icache_data2_dout ),
-  .WEN                (icache_data_bwen_b)
-);
-
-aq_spsram_2048x32  x_aq_spsram_2048x32_1 (
-  .A                  (icache_data1_idx  ),
-  .CEN                (icache_data1_cen_b),
-  .CLK                (icache_data1_clk  ),
-  .D                  (icache_data1_din  ),
-  .GWEN               (icache_data_gwen_b),
-  .Q                  (icache_data1_dout ),
-  .WEN                (icache_data_bwen_b)
-);
-
-aq_spsram_2048x32  x_aq_spsram_2048x32_0 (
-  .A                  (icache_data0_idx  ),
-  .CEN                (icache_data0_cen_b),
-  .CLK                (icache_data0_clk  ),
-  .D                  (icache_data0_din  ),
-  .GWEN               (icache_data_gwen_b),
-  .Q                  (icache_data0_dout ),
-  .WEN                (icache_data_bwen_b)
-);
-
 
 endmodule
